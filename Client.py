@@ -1,21 +1,22 @@
-
-# Echo client program
+# Communication Client program
+from data import Network_Communication
 import socket
 
-HOST = '127.0.0.100'               # Symbolic name meaning all available interfaces
-PORT = 50007              # Arbitrary non-privileged port
+HOST = Network_Communication.HOST
+PORT = Network_Communication.PORT
+TIMEOUT = Network_Communication.SUBSCEN_MAXTIME
+
 s = None
 conn = None
 addr = None
 
 
-def connect(send_it=False):
+def connect(send_it=False, time_out=None):
     """
     used to connect
     :return: only when we connect successfully will stop this function and return True
     """
     global s, conn, addr
-    # while True:
     for res in socket.getaddrinfo(HOST, PORT, socket.AF_UNSPEC, socket.SOCK_STREAM):
         af, socktype, proto, canonname, sa = res
         try:
@@ -37,7 +38,6 @@ def connect(send_it=False):
 
     if s is not None:
         return True
-
         # if s is None:
         #     print('could not open socket')
         #     sys.exit(1)
@@ -77,25 +77,3 @@ def send(message):
     global s
     s.sendall(message.encode('utf-8'))  # here we must send byte type
 
-
-def send_and_receive():
-    while True:
-        while True:
-            t = connect(True)
-            if t:
-                break
-        global s, conn, addr
-        message = input('请输入：')
-        s.sendall(message.encode('utf-8'))  # here we must send byte type
-
-        while True:
-            t = connect()
-            if t:
-                break
-        conn, addr = s.accept()
-        with conn:
-            print('Connected by', addr)
-            while True:
-                data = conn.recv(1024)
-                if not data: break
-                print('接受到：' + data.decode('utf-8'))
