@@ -4,6 +4,8 @@ import Client
 Client.send('对本期完成的凭证进行提交处理')
 print(Client.receive())
 print(Client.receive())
+
+
 print(Client.receive())
 
 # # 执行查看
